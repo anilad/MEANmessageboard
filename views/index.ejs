@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MEAN Message Board</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1>The Dojo Message Board</h1>
+    </div>
+    <form action="/message" method="post">
+        <div class="form-group">
+            <label for="name">Name: </label>
+            <input type="text" class="form-control" name="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="message">Message: </label>
+            <textarea class="form-control" name="message" placeholder="Enter message"></textarea>
+        </div>
+        <button class="btn btn-primary">Post Message</button>
+    </form>
+    <% if(typeof(errors) != 'undefined' ) { %>
+        <% for (var x in errors) { %>
+         <p class="text-danger"><%= errors[x].message %></p>
+        <% } %>
+    <% } %>
+    
+    <% if(typeof(cErrors) != 'undefined' ) { %>
+        <% for (var x in cErrors) { %>
+         <p class="text-danger"><%= cErrors[x].message %></p>
+        <% } %>
+    <% } %>
+    
+    <% if(typeof(msgs) != 'undefined' ) { %>
+    <div class="container">
+        <% if(msgs.length==0){ %>
+            <p>No messages posted yet.</p>
+        <% } <!-- if no messages -->
+
+         else {%>
+            <% for(var msg of msgs) {%>
+                <% var id = msg._id %>
+            <div class="container bg-light">
+                <h4 class="d-inline-block">Name: </h4> <h5 class="d-inline-block"><%= msg.name %></h5>
+                <br>
+                <h4 class="d-inline-block">Message: </h4>
+                <h6 class="d-inline-block"><%= msg.text %></h6>
+                <% for(var comment of msg.comments) {%>
+                    <div class="container bg-white">
+                        <h6>Name: <%= comment.name%></h6>
+                    <p>Comment: <%= comment.text%></p>
+                    </div>
+                <% } %> <!-- loop to grab comments -->
+                <form action="/comment/<%=id%>" method="post">
+                    <div class="form-group">
+                        <label for="name">Name: </label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Message: </label>
+                        <textarea class="form-control" name="comment" placeholder="Enter comment"></textarea>
+                    </div>
+                    <button class="btn btn-primary">Post Comment</button>
+                </form>
+            </div>
+            <br>
+            <% } %> <!-- loop to grab messages-->
+        <% } %> <!-- else we have messages-->
+    </div>
+    <% } %>
+</body>
+
+</html>
